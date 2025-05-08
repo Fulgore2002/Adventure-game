@@ -10,8 +10,14 @@ namespace Adventure_game
     public class Area
     {
         public string Name;
+        public BitmapImage LocationImage;
 
-        BitmapImage LocationImage = new BitmapImage(new Uri("LocationPlaceholder.bmp", Uri);
+        public Area()
+        {
+
+            LocationImage = new BitmapImage(new Uri("LocationPlaceholder.bmp", UriKind.Relative));
+        }
+
         public string PlayerVisit()
         {
             return $"Welcome to \"{Name}\"";

@@ -8,79 +8,79 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Adventure_game;
 
-namespace Adventure_game
+namespace Adventure_game;
+
+enum GameState
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    /// 
+    Setup,
+    Explore
+}
 
-    enum GameState
+public partial class MainWindow : Window
+{
+    public World TheWorld = new World();
+    public Person Player = new Person();
+    public MainWindow()
     {
-        Setup,
-        Explore
+        InitializeComponent();
     }
 
-
-    public partial class MainWindow : Window
+    public void MainGrid_Loaded(object sender, RoutedEventArgs e)
     {
-        public World TheWorld = new World();
-        public Person Player = new Person();
-        public MainWindow()
+        Output.Text = "Hello!";
+        Output.Text = "\nPlease enter in the name for you character below...";
+    }
+
+    public void SubmitButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (Player.Name == "")
         {
-            InitializeComponent();
+            SetPlayerName();
+        }
+        else
+        {
+            ExploreWorld();
         }
 
-        private void MainGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            Output.Text = "Hello!";
-            Output.Text = "\nPlease enter in the name for you character below...";
-        }
 
-        private void SubmitButton_Click(object sender, RoutedEventArgs e)
+
+    }
+
+    private void SetPlayerName()
+    {
+        Player.Name = Input.Text;
+
+        if (Input.Text == "")
         {
-            if (Player.Name == "")
+            Player.Name = "Annoymous Player";
+        }
+        Player.Name = Input.Text;
+        Input.Text = "";
+    }
+
+    private void ExploreWorld()
+    {
+        Output.Text += $"{Player.Name}, enter the number of the location you would like to visit.";
+        Output.Text += TheWorld.GetLocationList();
+
+        string input = Input.Text;
+
+        if (int.TryParse(input, out int number))
+        {
+            if (number >= 0 && number < TheWorld.Locations.Count)
             {
-                SetPlayerName();
+                Output.Text = TheWorld.Locations[number].PlayerVisit();
             }
             else
             {
-                ExploreWorld();
+                Output.Text = "Invalid location number. Please enter a valid number.";
             }
-
-
-
         }
-
-        private void SetPlayerName()
+        else
         {
-            Player.Name = Input.Text;
-
-            if (Input.Text == "")
-            {
-                Player.Name = "Annoymous Player";
-            }
-            Player.Name = Input.Text;
-            Input.Text = "";
-        }
-
-        private void ExploreWorld()
-        {
-            Output.Text += $"{Player.Name}, enter the number of the location you would like to visit.";
-            Output.Text += TheWorld.GetLocationList();
-
-            string input = Input.Text;
-
-            if (int.TryParse(input, out int number))
-            {
-                if (number < 0) {
-                    number--;
-
-                    Output.Text = TheWorld.Locations{ number}.PlayerVisit();
-                    
-            }
-            }
+            Output.Text = "Invalid input. Please enter a number.";
         }
     }
 }
